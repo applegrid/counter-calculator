@@ -31,84 +31,90 @@
       color: var(--text);
       min-height: 100vh;
       padding:
-        max(16px, env(safe-area-inset-top))
-        16px
-        max(16px, env(safe-area-inset-bottom))
-        16px;
+        max(14px, env(safe-area-inset-top))
+        14px
+        max(14px, env(safe-area-inset-bottom))
+        14px;
     }
 
     .wrap {
-      max-width: 960px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 22px;
+      border-radius: 22px;
+      padding: 18px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(8px);
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(26px, 5vw, 34px);
+      margin: 0 0 6px;
+      font-size: clamp(24px, 4vw, 32px);
       line-height: 1.15;
     }
 
     .sub {
       color: var(--muted);
-      margin-bottom: 18px;
-      line-height: 1.6;
-      font-size: 14px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+      font-size: 13px;
     }
 
-    .result-top {
+    .result-strip {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 18px;
-      align-items: stretch;
+      grid-template-columns: 1.3fr 1fr 0.9fr;
+      gap: 10px;
+      margin-bottom: 14px;
     }
 
-    .result-box {
+    .result-item {
       background: linear-gradient(180deg, rgba(11,18,32,1) 0%, rgba(9,15,28,1) 100%);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      min-height: 132px;
+      border-radius: 16px;
+      padding: 14px 16px;
+      min-height: 96px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      overflow: hidden;
     }
 
     .result-title {
       color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 10px;
+      font-size: 12px;
+      margin-bottom: 8px;
       font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .result-value {
-      font-size: clamp(26px, 4vw, 38px);
+      font-size: clamp(24px, 3.2vw, 36px);
       font-weight: 900;
-      word-break: break-word;
-      line-height: 1.1;
+      line-height: 1.05;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .status {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
       border-radius: 999px;
       padding: 10px 14px;
-      font-size: 15px;
-      font-weight: 800;
+      font-size: clamp(14px, 1.7vw, 18px);
+      font-weight: 900;
+      line-height: 1.2;
       width: fit-content;
       max-width: 100%;
-      line-height: 1.35;
+      white-space: nowrap;
     }
 
     .status.ok { background: rgba(34, 197, 94, 0.15); color: #86efac; }
@@ -120,9 +126,9 @@
       gap: 8px;
       background: #0b1220;
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
     }
 
     .clock-top {
@@ -139,7 +145,7 @@
     }
 
     .clock-time {
-      font-size: clamp(30px, 6vw, 42px);
+      font-size: clamp(28px, 4vw, 40px);
       font-weight: 800;
       letter-spacing: 0.5px;
       line-height: 1;
@@ -159,27 +165,26 @@
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
     label {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--muted);
       font-weight: 600;
     }
 
     input, select {
       width: 100%;
-      min-height: 56px;
+      min-height: 52px;
       background: var(--input);
       color: var(--text);
       border: 1px solid #334155;
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       font-size: 20px;
       font-weight: 700;
       outline: none;
-      box-shadow: none;
       font-variant-numeric: tabular-nums;
     }
 
@@ -196,7 +201,7 @@
     .hint {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .quick-row {
@@ -215,7 +220,7 @@
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
-      min-height: 38px;
+      min-height: 36px;
       transition: transform 0.08s ease, background-color 0.12s ease, border-color 0.12s ease;
     }
 
@@ -229,30 +234,23 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
     button {
       border: 0;
       border-radius: 14px;
-      min-height: 52px;
+      min-height: 50px;
       padding: 12px 16px;
       font-size: 16px;
       font-weight: 800;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
-      transition: transform 0.08s ease, filter 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+      transition: transform 0.08s ease, filter 0.12s ease, box-shadow 0.12s ease;
     }
 
-    button:hover {
-      filter: brightness(1.03);
-    }
-
-    button:active {
-      transform: scale(0.98);
-      filter: brightness(0.95);
-    }
-
+    button:hover { filter: brightness(1.03); }
+    button:active { transform: scale(0.98); filter: brightness(0.95); }
     button.pressed {
       transform: scale(0.98);
       filter: brightness(0.95);
@@ -273,18 +271,18 @@
     .error {
       color: #fca5a5;
       font-size: 14px;
-      margin-top: 12px;
+      margin-top: 10px;
       min-height: 20px;
       line-height: 1.45;
     }
 
     .formula {
-      margin-top: 18px;
+      margin-top: 14px;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.65;
+      line-height: 1.6;
       border-top: 1px solid var(--border);
-      padding-top: 16px;
+      padding-top: 14px;
     }
 
     code {
@@ -295,72 +293,91 @@
     }
 
     @media (max-width: 900px) {
-      .result-top {
-        grid-template-columns: 1fr;
+      .result-strip {
+        grid-template-columns: 1.25fr 1fr 0.9fr;
       }
+      .result-item { min-height: 88px; }
     }
 
     @media (max-width: 720px) {
       body {
         padding:
-          max(12px, env(safe-area-inset-top))
-          12px
-          max(12px, env(safe-area-inset-bottom))
-          12px;
+          max(10px, env(safe-area-inset-top))
+          10px
+          max(10px, env(safe-area-inset-bottom))
+          10px;
       }
 
       .card {
-        padding: 16px;
-        border-radius: 20px;
+        padding: 14px;
+        border-radius: 18px;
       }
 
       .grid, .buttons {
         grid-template-columns: 1fr;
       }
 
-      .clock, .result-box {
-        padding: 16px;
-      }
-
-      .sub {
-        font-size: 13px;
-      }
-
-      .result-top {
+      .result-strip {
         position: sticky;
-        top: max(8px, env(safe-area-inset-top));
+        top: max(6px, env(safe-area-inset-top));
         z-index: 5;
+        gap: 8px;
       }
 
-      .result-top .result-box {
+      .result-item {
+        min-height: 82px;
+        padding: 12px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.28);
-        backdrop-filter: blur(8px);
-        min-height: auto;
-      }
-    }
-
-    @media (max-width: 420px) {
-      input, select {
-        font-size: 18px;
-        min-height: 52px;
       }
 
-      .chip {
+      .result-title {
+        font-size: 11px;
+        margin-bottom: 6px;
+      }
+
+      .result-value {
+        font-size: clamp(18px, 4.8vw, 26px);
+      }
+
+      .status {
         font-size: 12px;
         padding: 8px 10px;
       }
 
-      button {
-        min-height: 50px;
-        font-size: 15px;
+      .clock, .result-item {
+        border-radius: 14px;
       }
 
-      .result-title {
+      .sub {
         font-size: 12px;
       }
 
+      .clock-time {
+        font-size: clamp(24px, 7vw, 30px);
+      }
+    }
+
+    @media (max-width: 520px) {
+      .result-strip {
+        grid-template-columns: 1.2fr 0.95fr 0.85fr;
+      }
+
       .result-value {
-        font-size: 26px;
+        font-size: clamp(16px, 4.5vw, 22px);
+      }
+
+      .status {
+        font-size: 11px;
+      }
+
+      input, select {
+        font-size: 18px;
+        min-height: 50px;
+      }
+
+      button {
+        min-height: 48px;
+        font-size: 15px;
       }
     }
   </style>
@@ -370,24 +387,24 @@
     <div class="card">
       <h1>Counter Rally Calculator</h1>
       <div class="sub">
-        Enemy rally timer is fixed at 5 minutes. This calculates the exact time when you should open your counter rally.
+        Enemy rally timer is fixed at 5 minutes. The top strip is optimized for quick in-game checking.
       </div>
 
-      <div class="result-top">
-        <div class="result-box">
+      <div class="result-strip">
+        <div class="result-item">
           <div class="result-title" id="resultTimeLabel">Counter Rally Open Time (UTC)</div>
           <div class="result-value" id="openAtTime">--:--:--</div>
         </div>
 
-        <div class="result-box">
+        <div class="result-item">
           <div class="result-title">Time Remaining</div>
           <div class="result-value" id="openIn">--</div>
         </div>
 
-        <div class="result-box">
+        <div class="result-item">
           <div class="result-title">Status</div>
           <div id="statusWrap">
-            <div class="status warn">Enter values to calculate</div>
+            <div class="status warn">Enter values</div>
           </div>
         </div>
       </div>
@@ -553,7 +570,7 @@
       lastTargetMs = null;
       openAtTime.textContent = "--:--:--";
       openIn.textContent = "--";
-      setStatus("danger", "Check input values");
+      setStatus("danger", "Check input");
     }
 
     function flashButton(button) {
@@ -613,7 +630,7 @@
       } else if (diffSec >= 0) {
         setStatus("warn", "Open now");
       } else {
-        setStatus("danger", "Late or open immediately");
+        setStatus("danger", "Too late");
       }
     }
 
@@ -636,7 +653,7 @@
       errorMsg.textContent = "";
       openAtTime.textContent = "--:--:--";
       openIn.textContent = "--";
-      setStatus("warn", "Enter values to calculate");
+      setStatus("warn", "Enter values");
       tickClock();
       calculate();
     }
