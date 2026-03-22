@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>카운터 랠리 계산기</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --border: #1f2937;
+      --input: #0b1220;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #020617 0%, #0f172a 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(17, 24, 39, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+    .sub {
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .clock {
+      display: grid;
+      gap: 6px;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .clock-label {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .clock-time {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+      .clock-time { font-size: 28px; }
+    }
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    input {
+      width: 100%;
+      background: var(--input);
+      color: var(--text);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px 14px;
+      font-size: 18px;
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    .buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .primary {
+      background: var(--accent);
+      color: #082f49;
+    }
+    .secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid #334155;
+    }
+    .result {
+      margin-top: 24px;
+      display: grid;
+      gap: 14px;
+    }
+    .result-box {
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .result-title {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .result-value {
+      font-size: 24px;
+      font-weight: 800;
+      word-break: break-word;
+    }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .status.ok { background: rgba(34,197,94,0.15); color: #86efac; }
+    .status.warn { background: rgba(245,158,11,0.15); color: #fcd34d; }
+    .status.danger { background: rgba(239,68,68,0.15); color: #fca5a5; }
+    .formula {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+    .error {
+      color: #fca5a5;
+      font-size: 14px;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+    .mini {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    code {
+      background: rgba(148, 163, 184, 0.12);
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>카운터 랠리 계산기</h1>
+      <div class="sub">
+        적 집결 시간은 5분 고정 기준입니다. 현재 UTC 기준으로
+        우리가 카운터 랠리를 열어야 하는 시각을 계산합니다.
+      </div>
+
+      <div class="clock">
+        <div class="clock-label">현재 UTC</div>
+        <div class="clock-time" id="utcClock">--:--:--</div>
+        <div class="mini" id="utcDate">----</div>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="travelTime">우리 랠리 캐슬 도착 시간</label>
+          <input id="travelTime" type="text" inputmode="numeric" placeholder="예: 00:40 또는 40" value="00:40" />
+          <div class="hint">입력 형식: <code>mm:ss</code> 또는 <code>초</code></div>
+        </div>
+
+        <div class="field">
+          <label for="enemyRemaining">적 집결 남은시간</label>
+          <input id="enemyRemaining" type="text" inputmode="numeric" placeholder="예: 03:20" value="03:20" />
+          <div class="hint">입력 형식: <code>mm:ss</code> 또는 <code>초</code> / 최대 05:00</div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="primary" id="calcBtn">계산하기</button>
+        <button class="secondary" id="resetBtn">초기화</button>
+      </div>
+
+      <div class="error" id="errorMsg"></div>
+
+      <div class="result">
+        <div class="result-box">
+          <div class="result-title">카운터 랠리 오픈 시각 (UTC)</div>
+          <div class="result-value" id="openAtUtc">--:--:--</div>
+        </div>
+
+        <div class="result-box">
+          <div class="result-title">지금부터 남은 시간</div>
+          <div class="result-value" id="openIn">--</div>
+        </div>
+
+        <div class="result-box">
+          <div class="result-title">상태</div>
+          <div id="statusWrap">
+            <div class="status warn">값을 입력하고 계산하세요</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="formula">
+        계산식: <code>카운터 오픈까지 남은 시간 = 적 집결 남은시간 - 우리 이동시간</code><br />
+        즉, <code>카운터 오픈 UTC = 현재 UTC + (적 집결 남은시간 - 우리 이동시간)</code><br />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const utcClock = document.getElementById("utcClock");
+    const utcDate = document.getElementById("utcDate");
+    const travelTimeInput = document.getElementById("travelTime");
+    const enemyRemainingInput = document.getElementById("enemyRemaining");
+    const openAtUtc = document.getElementById("openAtUtc");
+    const openIn = document.getElementById("openIn");
+    const statusWrap = document.getElementById("statusWrap");
+    const errorMsg = document.getElementById("errorMsg");
+    const calcBtn = document.getElementById("calcBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let lastTargetMs = null;
+
+    function pad(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function formatUtcDate(date) {
+      return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+    }
+
+    function formatUtcTime(date) {
+      return `${pad(date.getUTCHours())}:${pad(date.getUTCMinutes())}:${pad(date.getUTCSeconds())}`;
+    }
+
+    function formatDuration(sec) {
+      const sign = sec < 0 ? "-" : "";
+      const abs = Math.abs(sec);
+      const m = Math.floor(abs / 60);
+      const s = abs % 60;
+      return `${sign}${pad(m)}:${pad(s)}`;
+    }
+
+    function parseTimeInput(value) {
+      const raw = String(value).trim();
+      if (!raw) return { ok: false, message: "값을 입력하세요." };
+
+      if (/^\d+$/.test(raw)) {
+        const seconds = Number(raw);
+        return Number.isFinite(seconds)
+          ? { ok: true, seconds }
+          : { ok: false, message: "숫자 형식이 올바르지 않습니다." };
+      }
+
+      const match = raw.match(/^(\d{1,2}):(\d{1,2})$/);
+      if (!match) {
+        return { ok: false, message: "시간 형식은 mm:ss 또는 초로 입력하세요." };
+      }
+
+      const minutes = Number(match[1]);
+      const seconds = Number(match[2]);
+
+      if (seconds >= 60) {
+        return { ok: false, message: "초는 60 미만이어야 합니다." };
+      }
+
+      return { ok: true, seconds: minutes * 60 + seconds };
+    }
+
+    function setStatus(type, text) {
+      statusWrap.innerHTML = `<div class="status ${type}">${text}</div>`;
+    }
+
+    function validateAndCalculate() {
+      errorMsg.textContent = "";
+
+      const travelParsed = parseTimeInput(travelTimeInput.value);
+      if (!travelParsed.ok) {
+        errorMsg.textContent = `우리 이동시간 오류: ${travelParsed.message}`;
+        return;
+      }
+
+      const enemyParsed = parseTimeInput(enemyRemainingInput.value);
+      if (!enemyParsed.ok) {
+        errorMsg.textContent = `적 집결 남은시간 오류: ${enemyParsed.message}`;
+        return;
+      }
+
+      const travelSec = travelParsed.seconds;
+      const enemySec = enemyParsed.seconds;
+
+      if (travelSec <= 0) {
+        errorMsg.textContent = "우리 이동시간은 1초 이상이어야 합니다.";
+        return;
+      }
+
+      if (enemySec < 0 || enemySec > 300) {
+        errorMsg.textContent = "적 집결 남은시간은 00:00 ~ 05:00 범위여야 합니다.";
+        return;
+      }
+
+      const now = new Date();
+      const remainingUntilOpen = enemySec - travelSec;
+      lastTargetMs = now.getTime() + remainingUntilOpen * 1000;
+
+      renderResult();
+    }
+
+    function renderResult() {
+      if (lastTargetMs === null) return;
+
+      const now = new Date();
+      const target = new Date(lastTargetMs);
+      const diffSec = Math.round((lastTargetMs - now.getTime()) / 1000);
+
+      openAtUtc.textContent = formatUtcTime(target);
+      openIn.textContent = diffSec >= 0 ? `${formatDuration(diffSec)} 후` : `${formatDuration(diffSec)} (지남)`;
+
+      if (diffSec > 10) {
+        setStatus("ok", "준비");
+      } else if (diffSec >= 0) {
+        setStatus("warn", "지금 열 준비");
+      } else {
+        setStatus("danger", "즉시 오픈 또는 이미 늦음");
+      }
+    }
+
+    function tickClock() {
+      const now = new Date();
+      utcClock.textContent = formatUtcTime(now);
+      utcDate.textContent = `${formatUtcDate(now)} UTC`;
+      renderResult();
+    }
+
+    calcBtn.addEventListener("click", validateAndCalculate);
+    resetBtn.addEventListener("click", () => {
+      travelTimeInput.value = "00:40";
+      enemyRemainingInput.value = "03:20";
+      lastTargetMs = null;
+      errorMsg.textContent = "";
+      openAtUtc.textContent = "--:--:--";
+      openIn.textContent = "--";
+      setStatus("warn", "값을 입력하고 계산하세요");
+    });
+
+    [travelTimeInput, enemyRemainingInput].forEach((input) => {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") validateAndCalculate();
+      });
+    });
+
+    tickClock();
+    setInterval(tickClock, 1000);
+  </script>
+</body>
+</html>
